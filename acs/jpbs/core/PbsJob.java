@@ -6,27 +6,22 @@ import java.util.Date;
 import acs.jbps.attrib.PbsResource;
 import acs.jbps.enums.PbsJobState;
 
-public class PbsJob implements IPbsObject {
-	private int id;
-	private String jobName;
-	private String jobOwner;
-	private PbsJobState state;
-	private URI errorPath;
-	private URI outputPath;
-	private Date ctime;
-	private int priority;
-	private Date qtime;
-	private PbsResource resourceList;
-	private String comment;
+public class PbsJob {
+	protected int id;
+	protected String jobName;
+	protected String jobOwner;
+	protected PbsJobState state;
+	protected URI errorPath;
+	protected URI outputPath;
+	protected Date ctime;
+	protected int priority;
+	protected Date qtime;
+	protected PbsResource resourceList;
+	protected String comment;
 	
-	private PbsQueue queue;
-	private PbsServer server;
+	protected PbsQueue queue;
+	protected PbsServer server;
 	
 	public PbsJob() { }
 	
-	public void updateSelf() { }
-	
-	public void updateChildren() { 
-		this.updateSelf();
-	}
 }

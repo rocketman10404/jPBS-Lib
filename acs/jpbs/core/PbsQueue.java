@@ -1,27 +1,29 @@
 package acs.jpbs.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.TreeMap;
 
 import acs.jbps.attrib.PbsResource;
 import acs.jbps.attrib.PbsStateCount;
 import acs.jbps.enums.PbsQueueType;
 
-public class PbsQueue implements IPbsObject {
-	private PbsQueueType type;
-	private PbsStateCount stateCount;
-	private PbsResource resourcesAssigned;
-	private PbsResource defaultChunk;
-	private boolean enabled;
-	private boolean started;
-	private int priority;
-	private PbsServer server;
+public class PbsQueue {
+	protected String name;
+	protected PbsQueueType type;
+	protected PbsStateCount stateCount;
+	protected PbsResource resourcesAssigned;
+	protected PbsResource defaultChunk;
+	protected boolean enabled;
+	protected boolean started;
+	protected int priority;
+	protected PbsServer server;
 	
-	public List<PbsJob> jobs = new ArrayList();
+	public TreeMap<Integer, PbsJob> jobs = new TreeMap<Integer, PbsJob>();
 	
-	public PbsQueue() { }
+	public PbsQueue(String _name) {
+		this.name = _name;
+	}
 	
-	public void updateSelf() { }
-	
-	public void updateChildren() { }
+	public String getName() {
+		return this.name;
+	}
 }
