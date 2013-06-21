@@ -36,7 +36,9 @@ public class PbsServer {
 		this.stateCount.debugOutput();
 		System.out.println(".defaultQueue : '"+this.defaultQueue.getName()+"'");
 		System.out.println(".resourcesAssigned : ");
+		this.resourcesAssigned.debugOutput();
 		System.out.println(".defaultChunk : ");
+		this.defaultChunk.debugOutput();
 		System.out.println(".schedulerIteration : '"+this.schedulerIteration+"'");
 		System.out.println(".fLicenses : '"+this.fLicenses+"'");
 		System.out.println(".resvEnable : '"+this.resvEnable+"'");

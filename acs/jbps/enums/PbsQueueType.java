@@ -8,4 +8,9 @@ public enum PbsQueueType {
 	private PbsQueueType(int _id) {
 		this.id = _id;
 	}
+	
+	public static PbsQueueType parseQueueType(String raw) {
+		if(raw.equals("Routing")) return PbsQueueType.ROUTING;
+		else return PbsQueueType.EXECUTION;
+	}
 }
