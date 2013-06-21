@@ -6,7 +6,7 @@ import java.util.Date;
 import acs.jbps.attrib.PbsResource;
 import acs.jbps.enums.PbsJobState;
 
-public class PbsJob {
+public class PbsJob implements IPbsObject {
 	private int id;
 	private String jobName;
 	private String jobOwner;
@@ -23,4 +23,10 @@ public class PbsJob {
 	private PbsServer server;
 	
 	public PbsJob() { }
+	
+	public void updateSelf() { }
+	
+	public void updateChildren() { 
+		this.updateSelf();
+	}
 }

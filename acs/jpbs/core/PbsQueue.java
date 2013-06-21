@@ -7,7 +7,7 @@ import acs.jbps.attrib.PbsResource;
 import acs.jbps.attrib.PbsStateCount;
 import acs.jbps.enums.PbsQueueType;
 
-public class PbsQueue {
+public class PbsQueue implements IPbsObject {
 	private PbsQueueType type;
 	private PbsStateCount stateCount;
 	private PbsResource resourcesAssigned;
@@ -20,4 +20,8 @@ public class PbsQueue {
 	public List<PbsJob> jobs = new ArrayList();
 	
 	public PbsQueue() { }
+	
+	public void updateSelf() { }
+	
+	public void updateChildren() { }
 }

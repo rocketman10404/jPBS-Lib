@@ -8,7 +8,7 @@ import acs.jbps.attrib.PbsServerLicenses;
 import acs.jbps.attrib.PbsStateCount;
 import acs.jbps.enums.PbsServerState;
 
-public class PbsServer {
+public class PbsServer implements IPbsObject {
 	/*
 	 * read-only attributes
 	 */
@@ -28,4 +28,8 @@ public class PbsServer {
 	public List<PbsQueue> queues = new ArrayList();
 	
 	public PbsServer() { }
+	
+	public void updateSelf() { }
+	
+	public void updateChildren() { }
 }
