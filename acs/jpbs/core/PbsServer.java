@@ -11,18 +11,18 @@ public class PbsServer {
 	/*
 	 * read-only attributes
 	 */
-	protected PbsServerState state;
-	protected String host;
-	protected boolean scheduling;
-	protected PbsStateCount stateCount;
-	protected PbsQueue defaultQueue;
-	protected PbsResource resourcesAssigned;
-	protected PbsResource defaultChunk;
-	protected int schedulerIteration;
-	protected int fLicenses;
-	protected boolean resvEnable;
-	protected PbsServerLicenses licenseCount;
-	protected String version;
+	protected PbsServerState state = null;
+	protected String host = null;
+	protected Boolean scheduling = null;
+	protected PbsStateCount stateCount = new PbsStateCount();
+	protected String defaultQueue = null;
+	protected PbsResource resourcesAssigned = new PbsResource();
+	protected PbsResource defaultChunk = new PbsResource();
+	protected Integer schedulerIteration = null;
+	protected Integer fLicenses = null;
+	protected Boolean resvEnable = null;
+	protected PbsServerLicenses licenseCount = new PbsServerLicenses();
+	protected String version = null;
 	
 	public HashMap<String, PbsQueue> queues = new HashMap<String, PbsQueue>();
 	
@@ -34,7 +34,7 @@ public class PbsServer {
 		System.out.println(".scheduling : '"+this.scheduling+"'");
 		System.out.println(".stateCount : ");
 		this.stateCount.debugOutput();
-		System.out.println(".defaultQueue : '"+this.defaultQueue.getName()+"'");
+		System.out.println(".defaultQueue : '"+this.defaultQueue+"'");
 		System.out.println(".resourcesAssigned : ");
 		this.resourcesAssigned.debugOutput();
 		System.out.println(".defaultChunk : ");
@@ -46,5 +46,9 @@ public class PbsServer {
 		this.licenseCount.debugOutput();
 		System.out.println(".version : '"+this.version+"'");
 		System.out.println("END SERVER OBJECT OUTPUT");
+	}
+	
+	public String getHostName() {
+		return this.host;
 	}
 }

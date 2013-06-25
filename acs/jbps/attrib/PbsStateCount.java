@@ -1,18 +1,18 @@
 package acs.jbps.attrib;
 
 public class PbsStateCount {
-	private int transit;
-	private int queued;
-	private int held;
-	private int waiting;
-	private int running;
-	private int exiting;
-	private int begun;
+	private int transit = 0;
+	private int queued = 0;
+	private int held = 0;
+	private int waiting = 0;
+	private int running = 0;
+	private int exiting = 0;
+	private int begun = 0;
 	
-	private PbsStateCount() { }
+	public PbsStateCount() { }
 	
 	public void debugOutput() {
-		System.out.println("PBS SERVER STATE OBJECT -- OUTPUT");
+		System.out.println("PBS STATE OBJECT -- OUTPUT");
 		System.out.println(".transit : '"+this.transit+"'");
 		System.out.println(".queued : '"+this.queued+"'");
 		System.out.println(".held : '"+this.held+"'");

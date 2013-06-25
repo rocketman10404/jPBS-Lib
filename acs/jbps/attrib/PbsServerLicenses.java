@@ -6,7 +6,7 @@ public class PbsServerLicenses {
 	public int used = 0;
 	public int highUse = 0;
 	
-	private PbsServerLicenses() { }
+	public PbsServerLicenses() { }
 	
 	public void debugOutput() {
 		System.out.println("PBS SERVER LICENSES OBJECT -- OUTPUT");

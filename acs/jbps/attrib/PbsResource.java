@@ -28,7 +28,7 @@ public class PbsResource {
 	public Long pvmem = null;
 	public String select = null;
 	public String software = null;
-	public Long startTime;
+	public Long startTime = null;
 	public Long vmem = null;
 	public String vnode = null;
 	public Duration wallTime = null;
@@ -75,8 +75,8 @@ public class PbsResource {
 	}
 	
 	public static PbsResource processResource(List<String[]> rawArrList) {
-		if(rawArrList == null || rawArrList.isEmpty()) return null;
 		PbsResource pr = new PbsResource();
+		if(rawArrList == null || rawArrList.isEmpty()) return pr;
 		for(String[] rawArr : rawArrList) {
 			if(rawArr.length != 2) continue;
 			String[] rawAtt = rawArr[0].split("\\.");
