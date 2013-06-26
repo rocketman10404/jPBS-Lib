@@ -1,4 +1,4 @@
-package acs.jbps.attrib;
+package acs.jpbs.attrib;
 
 public class PbsServerLicenses {
 	public int availGlobal = 0;

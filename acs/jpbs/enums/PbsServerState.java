@@ -1,4 +1,4 @@
-package acs.jbps.enums;
+package acs.jpbs.enums;
 
 public enum PbsServerState {
 	HOT_START(1),

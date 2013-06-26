@@ -3,8 +3,8 @@ package acs.jpbs.core;
 import java.net.URI;
 import java.util.Date;
 
-import acs.jbps.attrib.PbsResource;
-import acs.jbps.enums.PbsJobState;
+import acs.jpbs.attrib.PbsResource;
+import acs.jpbs.enums.PbsJobState;
 
 public class PbsJob {
 	protected int id;

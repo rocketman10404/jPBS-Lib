@@ -2,9 +2,9 @@ package acs.jpbs.core;
 
 import java.util.TreeMap;
 
-import acs.jbps.attrib.PbsResource;
-import acs.jbps.attrib.PbsStateCount;
-import acs.jbps.enums.PbsQueueType;
+import acs.jpbs.attrib.PbsResource;
+import acs.jpbs.attrib.PbsStateCount;
+import acs.jpbs.enums.PbsQueueType;
 
 public class PbsQueue {
 	protected String name;

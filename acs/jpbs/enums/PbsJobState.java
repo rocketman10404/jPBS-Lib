@@ -1,4 +1,4 @@
-package acs.jbps.enums;
+package acs.jpbs.enums;
 
 public enum PbsJobState {
 	EXITING(1),

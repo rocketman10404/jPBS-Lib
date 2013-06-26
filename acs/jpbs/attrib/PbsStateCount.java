@@ -1,4 +1,4 @@
-package acs.jbps.attrib;
+package acs.jpbs.attrib;
 
 public class PbsStateCount {
 	private int transit = 0;

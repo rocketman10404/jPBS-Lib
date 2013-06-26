@@ -1,4 +1,4 @@
-package acs.jbps.attrib;
+package acs.jpbs.attrib;
 
 import java.util.Date;
 import java.util.HashMap;

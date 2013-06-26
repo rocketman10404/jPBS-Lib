@@ -2,10 +2,10 @@ package acs.jpbs.core;
 
 import java.util.HashMap;
 
-import acs.jbps.attrib.PbsResource;
-import acs.jbps.attrib.PbsServerLicenses;
-import acs.jbps.attrib.PbsStateCount;
-import acs.jbps.enums.PbsServerState;
+import acs.jpbs.attrib.PbsResource;
+import acs.jpbs.attrib.PbsServerLicenses;
+import acs.jpbs.attrib.PbsStateCount;
+import acs.jpbs.enums.PbsServerState;
 
 public class PbsServer {
 	/*
