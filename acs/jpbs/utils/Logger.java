@@ -1,8 +1,8 @@
 package acs.jpbs.utils;
 
-public class jPBSLogger {
+public class Logger {
 	
-	private jPBSLogger() { }
+	private Logger() { }
 	
 	public static void logError(String error) {
 		System.out.println("[ERROR] "+error);

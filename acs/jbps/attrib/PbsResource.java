@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import javax.xml.datatype.Duration;
 
-import acs.jpbs.utils.jPBSUtils;
+import acs.jpbs.utils.Utils;
 
 public class PbsResource {
 	public String arch = null;
@@ -85,7 +85,7 @@ public class PbsResource {
 			
 			if(rawAtt[1].equals("arch")) pr.arch = rawArr[1].trim();
 			else if(rawAtt[1].equals("cpupercent")) pr.cpupercent = Integer.parseInt(rawArr[1].trim());
-			else if(rawAtt[1].equals("cput")) pr.cput = jPBSUtils.getHMSDuration(rawArr[1].trim());
+			else if(rawAtt[1].equals("cput")) pr.cput = Utils.getHMSDuration(rawArr[1].trim());
 			else if(rawAtt[1].equals("exec_vnode")) pr.execVnode = rawArr[1].trim();
 			else if(rawAtt[1].equals("file")) pr.file = Long.parseLong(rawArr[1].trim().replace("kb", ""));
 			else if(rawAtt[1].equals("host")) pr.host = rawArr[1].trim();
@@ -96,7 +96,7 @@ public class PbsResource {
 			else if(rawAtt[1].equals("nice")) pr.nice = Integer.parseInt(rawArr[1].trim());
 			else if(rawAtt[1].equals("nodect")) pr.nodeCount = Integer.parseInt(rawArr[1].trim());
 			else if(rawAtt[1].equals("ompthreads")) pr.ompThreads = Integer.parseInt(rawArr[1].trim());
-			else if(rawAtt[1].equals("pcput")) pr.pcput = jPBSUtils.getHMSDuration(rawArr[1].trim());
+			else if(rawAtt[1].equals("pcput")) pr.pcput = Utils.getHMSDuration(rawArr[1].trim());
 			else if(rawAtt[1].equals("pmem")) pr.pmem = Long.parseLong(rawArr[1].trim().replace("kb",""));
 			else if(rawAtt[1].equals("pvmem")) pr.pvmem = Long.parseLong(rawArr[1].trim().replace("kb",""));
 			else if(rawAtt[1].equals("select")) pr.select = rawArr[1].trim();
@@ -104,7 +104,7 @@ public class PbsResource {
 			else if(rawAtt[1].equals("start_time")) pr.startTime = Long.parseLong(rawArr[1].trim());
 			else if(rawAtt[1].equals("vmem")) pr.vmem = Long.parseLong(rawArr[1].trim().replace("kb",""));
 			else if(rawAtt[1].equals("vnode")) pr.vnode = rawArr[1].trim();
-			else if(rawAtt[1].equals("walltime")) pr.wallTime = jPBSUtils.getHMSDuration(rawArr[1].trim());
+			else if(rawAtt[1].equals("walltime")) pr.wallTime = Utils.getHMSDuration(rawArr[1].trim());
 		}
 		return pr;
 	}

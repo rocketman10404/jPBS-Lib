@@ -8,20 +8,25 @@ import acs.jbps.enums.PbsJobState;
 
 public class PbsJob {
 	protected int id;
-	protected String jobName;
-	protected String jobOwner;
-	protected PbsJobState state;
-	protected URI errorPath;
-	protected URI outputPath;
-	protected Date ctime;
-	protected int priority;
-	protected Date qtime;
-	protected PbsResource resourceList;
-	protected String comment;
+	protected String jobName = null;
+	protected String jobOwner = null;
+	protected PbsJobState state = null;
+	protected URI errorPath = null;
+	protected URI outputPath = null;
+	protected Date ctime = null;
+	protected int priority = 0;
+	protected Date qtime = null;
+	protected PbsResource resourceList = new PbsResource();
+	protected String comment = "";
 	
 	protected PbsQueue queue;
-	protected PbsServer server;
 	
-	public PbsJob() { }
+	public PbsJob(int _id, PbsQueue _q) {
+		this.id = _id;
+		this.queue = _q;
+	}
 	
+	public int getId() {
+		return this.id;
+	}
 }

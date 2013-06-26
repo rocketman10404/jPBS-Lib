@@ -15,7 +15,7 @@ public enum PbsJobState {
 		this.id = _id;
 	}
 	
-	public PbsJobState getStateByChar(char _state) {
+	public static PbsJobState getStateByChar(char _state) {
 		switch(_state) {
 		case 'E':
 			return EXITING;
