@@ -2,6 +2,8 @@ package acs.jpbs.core;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import acs.jpbs.attrib.PbsResource;
 import acs.jpbs.attrib.PbsServerLicenses;
@@ -11,13 +13,17 @@ import acs.jpbs.enums.PbsServerState;
 public class PbsServer implements Serializable {
 	private static final long serialVersionUID = 6455928702644240133L;
 	/*
-	 * read-only attributes
+	 * PbsServer implemented as Singleton
+	 */
+	private static PbsServer instance = null;
+	/*
+	 * Serialized object data to be transmitted between client/server
 	 */
 	protected PbsServerState state = null;
 	protected String host = null;
 	protected Boolean scheduling = null;
 	protected PbsStateCount stateCount = new PbsStateCount();
-	protected String defaultQueue = null;
+	protected String defaultQueueKey = null;
 	protected PbsResource resourcesAssigned = new PbsResource();
 	protected PbsResource defaultChunk = new PbsResource();
 	protected Integer schedulerIteration = null;
@@ -25,10 +31,15 @@ public class PbsServer implements Serializable {
 	protected Boolean resvEnable = null;
 	protected PbsServerLicenses licenseCount = new PbsServerLicenses();
 	protected String version = null;
+	/*
+	 * Transient object data to be reconstructed on either side
+	 */
+	public transient HashMap<String, PbsQueue> queues = new HashMap<String, PbsQueue>();
+	private transient final ReentrantReadWriteLock queueMapLock = new ReentrantReadWriteLock(true);
+	protected transient final Lock queueMapWriteLock = queueMapLock.writeLock();
+	public transient final Lock queueMapReadLock = queueMapLock.readLock();
 	
-	public HashMap<String, PbsQueue> queues = new HashMap<String, PbsQueue>();
-	
-	public PbsServer() { }
+	protected PbsServer() { }
 	
 	public void debugPrint() {
 		System.out.println("PBS SERVER OBJECT -- OUTPUT");
@@ -36,7 +47,7 @@ public class PbsServer implements Serializable {
 		System.out.println(".scheduling : '"+this.scheduling+"'");
 		System.out.println(".stateCount : ");
 		this.stateCount.debugOutput();
-		System.out.println(".defaultQueue : '"+this.defaultQueue+"'");
+		System.out.println(".defaultQueue : '"+this.defaultQueueKey+"'");
 		System.out.println(".resourcesAssigned : ");
 		this.resourcesAssigned.debugOutput();
 		System.out.println(".defaultChunk : ");
@@ -53,6 +64,13 @@ public class PbsServer implements Serializable {
 	public String getHostName() {
 		return this.host;
 	}
+	
+	public static PbsServer getInstance() {
+		if(instance == null) {
+			instance = new PbsServer();
+		}
+		return instance;
+	}
 
 	@Override
 	public int hashCode() {
@@ -61,13 +79,18 @@ public class PbsServer implements Serializable {
 		result = prime * result
 				+ ((defaultChunk == null) ? 0 : defaultChunk.hashCode());
 		result = prime * result
-				+ ((defaultQueue == null) ? 0 : defaultQueue.hashCode());
+				+ ((defaultQueueKey == null) ? 0 : defaultQueueKey.hashCode());
 		result = prime * result
 				+ ((fLicenses == null) ? 0 : fLicenses.hashCode());
 		result = prime * result + ((host == null) ? 0 : host.hashCode());
 		result = prime * result
 				+ ((licenseCount == null) ? 0 : licenseCount.hashCode());
-		result = prime * result + ((queues == null) ? 0 : queues.hashCode());
+		this.queueMapReadLock.lock();
+		try {
+			result = prime * result + ((queues == null) ? 0 : queues.hashCode());
+		} finally {
+			this.queueMapReadLock.unlock();
+		}
 		result = prime
 				* result
 				+ ((resourcesAssigned == null) ? 0 : resourcesAssigned
@@ -101,10 +124,10 @@ public class PbsServer implements Serializable {
 				return false;
 		} else if (!defaultChunk.equals(other.defaultChunk))
 			return false;
-		if (defaultQueue == null) {
-			if (other.defaultQueue != null)
+		if (defaultQueueKey == null) {
+			if (other.defaultQueueKey != null)
 				return false;
-		} else if (!defaultQueue.equals(other.defaultQueue))
+		} else if (!defaultQueueKey.equals(other.defaultQueueKey))
 			return false;
 		if (fLicenses == null) {
 			if (other.fLicenses != null)
@@ -121,11 +144,16 @@ public class PbsServer implements Serializable {
 				return false;
 		} else if (!licenseCount.equals(other.licenseCount))
 			return false;
-		if (queues == null) {
-			if (other.queues != null)
+		this.queueMapReadLock.lock();
+		try {
+			if (queues == null) {
+				if (other.queues != null)
+					return false;
+			} else if (!queues.equals(other.queues))
 				return false;
-		} else if (!queues.equals(other.queues))
-			return false;
+		} finally {
+			this.queueMapReadLock.unlock();
+		}
 		if (resourcesAssigned == null) {
 			if (other.resourcesAssigned != null)
 				return false;

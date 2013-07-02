@@ -20,12 +20,11 @@ public class PbsJob implements Serializable {
 	protected Date qtime = null;
 	protected PbsResource resourceList = new PbsResource();
 	protected String comment = "";
+	protected String queueKey;
 	
-	protected PbsQueue queue;
-	
-	public PbsJob(int _id, PbsQueue _q) {
+	public PbsJob(int _id, String _q) {
 		this.id = _id;
-		this.queue = _q;
+		this.queueKey = _q;
 	}
 	
 	public int getId() {
@@ -48,7 +47,7 @@ public class PbsJob implements Serializable {
 				+ ((outputPath == null) ? 0 : outputPath.hashCode());
 		result = prime * result + priority;
 		result = prime * result + ((qtime == null) ? 0 : qtime.hashCode());
-		result = prime * result + ((queue == null) ? 0 : queue.hashCode());
+		result = prime * result + ((queueKey == null) ? 0 : queueKey.hashCode());
 		result = prime * result
 				+ ((resourceList == null) ? 0 : resourceList.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
@@ -103,10 +102,10 @@ public class PbsJob implements Serializable {
 				return false;
 		} else if (!qtime.equals(other.qtime))
 			return false;
-		if (queue == null) {
-			if (other.queue != null)
+		if (queueKey == null) {
+			if (other.queueKey != null)
 				return false;
-		} else if (!queue.equals(other.queue))
+		} else if (!queueKey.equals(other.queueKey))
 			return false;
 		if (resourceList == null) {
 			if (other.resourceList != null)

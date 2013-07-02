@@ -2,6 +2,8 @@ package acs.jpbs.core;
 
 import java.io.Serializable;
 import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import acs.jpbs.attrib.PbsResource;
 import acs.jpbs.attrib.PbsStateCount;
@@ -9,6 +11,10 @@ import acs.jpbs.enums.PbsQueueType;
 
 public class PbsQueue implements Serializable {
 	private static final long serialVersionUID = -5614180437640698241L;
+	
+	/*
+	 * Serialized object data transmitted beteween client/server
+	 */
 	protected String name;
 	protected PbsQueueType type = null;
 	protected PbsStateCount stateCount = new PbsStateCount();
@@ -17,9 +23,15 @@ public class PbsQueue implements Serializable {
 	protected Boolean enabled = null;
 	protected Boolean started = null;
 	protected int priority = 0;
-	protected PbsServer server;
 	
-	public TreeMap<Integer, PbsJob> jobs = new TreeMap<Integer, PbsJob>();
+	/*
+	 * Transient object data to be reconstructed on either side
+	 */
+	protected transient PbsServer server;	
+	public transient TreeMap<Integer, PbsJob> jobs = new TreeMap<Integer, PbsJob>();
+	private transient final ReentrantReadWriteLock jobMapLock = new ReentrantReadWriteLock(true);
+	protected transient final Lock jobMapWriteLock = jobMapLock.writeLock();
+	public transient final Lock jobMapReadLock = jobMapLock.readLock();
 	
 	public PbsQueue(String _name, PbsServer myServer) {
 		this.name = _name;
@@ -54,7 +66,12 @@ public class PbsQueue implements Serializable {
 		result = prime * result
 				+ ((defaultChunk == null) ? 0 : defaultChunk.hashCode());
 		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
-		result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
+		this.jobMapReadLock.lock();
+		try {
+			result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
+		} finally {
+			this.jobMapReadLock.unlock();
+		}
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + priority;
 		result = prime
@@ -88,11 +105,16 @@ public class PbsQueue implements Serializable {
 				return false;
 		} else if (!enabled.equals(other.enabled))
 			return false;
-		if (jobs == null) {
-			if (other.jobs != null)
+		this.jobMapReadLock.lock();
+		try {
+			if (jobs == null) {
+				if (other.jobs != null)
+					return false;
+			} else if (!jobs.equals(other.jobs))
 				return false;
-		} else if (!jobs.equals(other.jobs))
-			return false;
+		} finally {
+			this.jobMapReadLock.unlock();
+		}
 		if (name == null) {
 			if (other.name != null)
 				return false;
