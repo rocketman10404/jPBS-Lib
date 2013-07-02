@@ -1,6 +1,10 @@
 package acs.jpbs.attrib;
 
-public class PbsServerLicenses {
+import java.io.Serializable;
+
+public class PbsServerLicenses implements Serializable {
+
+	private static final long serialVersionUID = -2574293919302300076L;
 	public int availGlobal = 0;
 	public int availLocal = 0;
 	public int used = 0;
@@ -30,5 +34,36 @@ public class PbsServerLicenses {
 			else psl.highUse = Integer.parseInt(state[1]);
 		}
 		return psl;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + availGlobal;
+		result = prime * result + availLocal;
+		result = prime * result + highUse;
+		result = prime * result + used;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PbsServerLicenses other = (PbsServerLicenses) obj;
+		if (availGlobal != other.availGlobal)
+			return false;
+		if (availLocal != other.availLocal)
+			return false;
+		if (highUse != other.highUse)
+			return false;
+		if (used != other.used)
+			return false;
+		return true;
 	}
 }

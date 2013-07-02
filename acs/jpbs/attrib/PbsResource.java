@@ -1,6 +1,6 @@
 package acs.jpbs.attrib;
 
-import java.util.Date;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +9,8 @@ import javax.xml.datatype.Duration;
 
 import acs.jpbs.utils.Utils;
 
-public class PbsResource {
+public class PbsResource implements Serializable {
+	private static final long serialVersionUID = -9065959700088246656L;
 	public String arch = null;
 	public Integer cpupercent = null;
 	public Duration cput = null;
@@ -63,7 +64,7 @@ public class PbsResource {
 		
 		
 		System.out.println("PBS RESOURCE OBJECT -- OUTPUT");
-		Iterator iter = tmp.entrySet().iterator();
+		Iterator<Entry<String, Object>> iter = tmp.entrySet().iterator();
 		Entry<String, Object> ptr = (Entry<String, Object>)iter.next();
 		while(iter.hasNext()) {
 			System.out.print(ptr.getKey() + " : ");
@@ -107,5 +108,117 @@ public class PbsResource {
 			else if(rawAtt[1].equals("walltime")) pr.wallTime = Utils.getHMSDuration(rawArr[1].trim());
 		}
 		return pr;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((arch == null) ? 0 : arch.hashCode());
+		result = prime * result + ((file == null) ? 0 : file.hashCode());
+		result = prime * result + ((host == null) ? 0 : host.hashCode());
+		result = prime * result + ((mem == null) ? 0 : mem.hashCode());
+		result = prime * result
+				+ ((mpiprocs == null) ? 0 : mpiprocs.hashCode());
+		result = prime * result + ((nchunk == null) ? 0 : nchunk.hashCode());
+		result = prime * result + ((ncpus == null) ? 0 : ncpus.hashCode());
+		result = prime * result
+				+ ((ompThreads == null) ? 0 : ompThreads.hashCode());
+		result = prime * result + ((pcput == null) ? 0 : pcput.hashCode());
+		result = prime * result + ((pmem == null) ? 0 : pmem.hashCode());
+		result = prime * result + ((pvmem == null) ? 0 : pvmem.hashCode());
+		result = prime * result + ((select == null) ? 0 : select.hashCode());
+		result = prime * result
+				+ ((software == null) ? 0 : software.hashCode());
+		result = prime * result + ((vmem == null) ? 0 : vmem.hashCode());
+		result = prime * result + ((vnode == null) ? 0 : vnode.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PbsResource other = (PbsResource) obj;
+		if (arch == null) {
+			if (other.arch != null)
+				return false;
+		} else if (!arch.equals(other.arch))
+			return false;
+		if (file == null) {
+			if (other.file != null)
+				return false;
+		} else if (!file.equals(other.file))
+			return false;
+		if (host == null) {
+			if (other.host != null)
+				return false;
+		} else if (!host.equals(other.host))
+			return false;
+		if (mem == null) {
+			if (other.mem != null)
+				return false;
+		} else if (!mem.equals(other.mem))
+			return false;
+		if (mpiprocs == null) {
+			if (other.mpiprocs != null)
+				return false;
+		} else if (!mpiprocs.equals(other.mpiprocs))
+			return false;
+		if (nchunk == null) {
+			if (other.nchunk != null)
+				return false;
+		} else if (!nchunk.equals(other.nchunk))
+			return false;
+		if (ncpus == null) {
+			if (other.ncpus != null)
+				return false;
+		} else if (!ncpus.equals(other.ncpus))
+			return false;
+		if (ompThreads == null) {
+			if (other.ompThreads != null)
+				return false;
+		} else if (!ompThreads.equals(other.ompThreads))
+			return false;
+		if (pcput == null) {
+			if (other.pcput != null)
+				return false;
+		} else if (!pcput.equals(other.pcput))
+			return false;
+		if (pmem == null) {
+			if (other.pmem != null)
+				return false;
+		} else if (!pmem.equals(other.pmem))
+			return false;
+		if (pvmem == null) {
+			if (other.pvmem != null)
+				return false;
+		} else if (!pvmem.equals(other.pvmem))
+			return false;
+		if (select == null) {
+			if (other.select != null)
+				return false;
+		} else if (!select.equals(other.select))
+			return false;
+		if (software == null) {
+			if (other.software != null)
+				return false;
+		} else if (!software.equals(other.software))
+			return false;
+		if (vmem == null) {
+			if (other.vmem != null)
+				return false;
+		} else if (!vmem.equals(other.vmem))
+			return false;
+		if (vnode == null) {
+			if (other.vnode != null)
+				return false;
+		} else if (!vnode.equals(other.vnode))
+			return false;
+		return true;
 	}
 }

@@ -1,6 +1,9 @@
 package acs.jpbs.attrib;
 
-public class PbsStateCount {
+import java.io.Serializable;
+
+public class PbsStateCount implements Serializable {
+	private static final long serialVersionUID = 597030985142433845L;
 	private int transit = 0;
 	private int queued = 0;
 	private int held = 0;
@@ -57,5 +60,45 @@ public class PbsStateCount {
 			else psc.begun = Integer.parseInt(state[1]);
 		}
 		return psc;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + begun;
+		result = prime * result + exiting;
+		result = prime * result + held;
+		result = prime * result + queued;
+		result = prime * result + running;
+		result = prime * result + transit;
+		result = prime * result + waiting;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PbsStateCount other = (PbsStateCount) obj;
+		if (begun != other.begun)
+			return false;
+		if (exiting != other.exiting)
+			return false;
+		if (held != other.held)
+			return false;
+		if (queued != other.queued)
+			return false;
+		if (running != other.running)
+			return false;
+		if (transit != other.transit)
+			return false;
+		if (waiting != other.waiting)
+			return false;
+		return true;
 	}
 }
