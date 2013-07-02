@@ -1,6 +1,8 @@
 package acs.jpbs.enums;
 
-public enum PbsJobState {
+import java.io.Serializable;
+
+public enum PbsJobState implements Serializable {
 	EXITING(1),
 	HELD(2),
 	QUEUED(3),

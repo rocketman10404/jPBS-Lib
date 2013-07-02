@@ -1,6 +1,8 @@
 package acs.jpbs.enums;
 
-public enum PbsQueueType {
+import java.io.Serializable;
+
+public enum PbsQueueType implements Serializable {
 	EXECUTION(1),
 	ROUTING(2);
 	
