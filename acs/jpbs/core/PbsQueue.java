@@ -1,5 +1,6 @@
 package acs.jpbs.core;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -30,9 +31,9 @@ public class PbsQueue implements Serializable {
 	 */
 	protected transient PbsServer server;	
 	private transient TreeMap<Integer, PbsJob> jobs = new TreeMap<Integer, PbsJob>();
-	private transient final ReentrantReadWriteLock jobMapLock = new ReentrantReadWriteLock(true);
-	protected transient final Lock jobMapWriteLock = jobMapLock.writeLock();
-	public transient final Lock jobMapReadLock = jobMapLock.readLock();
+	private transient ReentrantReadWriteLock jobMapLock = new ReentrantReadWriteLock(true);
+	private transient Lock jobMapWriteLock = jobMapLock.writeLock();
+	private transient Lock jobMapReadLock = jobMapLock.readLock();
 	
 	public PbsQueue(String _name, PbsServer myServer) {
 		this.name = _name;
@@ -65,88 +66,6 @@ public class PbsQueue implements Serializable {
 		System.out.println("END SERVER OBJECT OUTPUT");
 	}
 	
-	public PbsJob getJob(int id) {
-		PbsJob retJob = null;
-		if(this.jobs == null || this.jobs.isEmpty()) return null;
-		this.jobMapReadLock.lock();
-		try {
-			if(this.jobs.containsKey(id)) retJob = this.jobs.get(id);
-		} finally {
-			this.jobMapReadLock.unlock();
-		}
-		return retJob;
-	}
-	
-	public PbsJob[] getJobArray() {
-		int numJobs = this.getNumJobs();
-		if(numJobs == 0) return null;
-		PbsJob[] retArr = null;
-		
-		this.jobMapReadLock.lock();
-		try {
-			retArr = new PbsJob[numJobs];
-			int i = 0;
-			for(Entry<Integer, PbsJob> jEntry : this.jobs.entrySet()) {
-				retArr[i++] = jEntry.getValue();
-			}
-		} finally {
-			this.jobMapReadLock.unlock();
-		}
-		return retArr;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public int getNumJobs() {
-		int retVal = 0;
-		this.jobMapReadLock.lock();
-		try {
-			if(this.jobs != null && !this.jobs.isEmpty()) retVal = this.jobs.size();
-		} finally {
-			this.jobMapReadLock.unlock();
-		}
-		return retVal;
-	}
-	
-	public void makeCopy(PbsQueue newQ) {
-		this.type = newQ.type;
-		this.stateCount = newQ.stateCount;
-		this.resourcesAssigned = newQ.resourcesAssigned;
-		this.defaultChunk = newQ.defaultChunk;
-		this.enabled = newQ.enabled;
-		this.started = newQ.started;
-		this.priority = newQ.priority;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((defaultChunk == null) ? 0 : defaultChunk.hashCode());
-		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
-		this.jobMapReadLock.lock();
-		try {
-			result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
-		} finally {
-			this.jobMapReadLock.unlock();
-		}
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + priority;
-		result = prime
-				* result
-				+ ((resourcesAssigned == null) ? 0 : resourcesAssigned
-						.hashCode());
-		result = prime * result + ((server == null) ? 0 : server.hashCode());
-		result = prime * result + ((started == null) ? 0 : started.hashCode());
-		result = prime * result
-				+ ((stateCount == null) ? 0 : stateCount.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -206,5 +125,97 @@ public class PbsQueue implements Serializable {
 		if (type != other.type)
 			return false;
 		return true;
+	}
+	
+	public PbsJob getJob(int id) {
+		PbsJob retJob = null;
+		if(this.jobs == null || this.jobs.isEmpty()) return null;
+		this.jobMapReadLock.lock();
+		try {
+			if(this.jobs.containsKey(id)) retJob = this.jobs.get(id);
+		} finally {
+			this.jobMapReadLock.unlock();
+		}
+		return retJob;
+	}
+	
+	public PbsJob[] getJobArray() {
+		int numJobs = this.getNumJobs();
+		if(numJobs == 0) return null;
+		PbsJob[] retArr = null;
+		
+		this.jobMapReadLock.lock();
+		try {
+			retArr = new PbsJob[numJobs];
+			int i = 0;
+			for(Entry<Integer, PbsJob> jEntry : this.jobs.entrySet()) {
+				retArr[i++] = jEntry.getValue();
+			}
+		} finally {
+			this.jobMapReadLock.unlock();
+		}
+		return retArr;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public int getNumJobs() {
+		int retVal = 0;
+		this.jobMapReadLock.lock();
+		try {
+			if(this.jobs != null && !this.jobs.isEmpty()) retVal = this.jobs.size();
+		} finally {
+			this.jobMapReadLock.unlock();
+		}
+		return retVal;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((defaultChunk == null) ? 0 : defaultChunk.hashCode());
+		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
+		this.jobMapReadLock.lock();
+		try {
+			result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
+		} finally {
+			this.jobMapReadLock.unlock();
+		}
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + priority;
+		result = prime
+				* result
+				+ ((resourcesAssigned == null) ? 0 : resourcesAssigned
+						.hashCode());
+		result = prime * result + ((server == null) ? 0 : server.hashCode());
+		result = prime * result + ((started == null) ? 0 : started.hashCode());
+		result = prime * result
+				+ ((stateCount == null) ? 0 : stateCount.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	public void makeCopy(PbsQueue newQ) {
+		this.type = newQ.type;
+		this.stateCount = newQ.stateCount;
+		this.resourcesAssigned = newQ.resourcesAssigned;
+		this.defaultChunk = newQ.defaultChunk;
+		this.enabled = newQ.enabled;
+		this.started = newQ.started;
+		this.priority = newQ.priority;
+	}
+	
+	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		stream.defaultReadObject();
+		if(this.jobMapLock == null) {
+			this.jobMapLock = new ReentrantReadWriteLock();
+			this.jobMapReadLock = this.jobMapLock.readLock();
+			this.jobMapWriteLock = this.jobMapLock.writeLock();
+		}
+		if(this.jobs == null) this.jobs = new TreeMap<Integer, PbsJob>();
 	}
 }
