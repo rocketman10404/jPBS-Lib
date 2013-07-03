@@ -26,9 +26,27 @@ public class PbsJob implements Serializable {
 		this.id = _id;
 		this.queueKey = _q;
 	}
-	
+		
 	public int getId() {
 		return this.id;
+	}
+	
+	public String getQueueName() {
+		return this.queueKey;
+	}
+	
+	public void makeCopy(PbsJob newJob) {
+		this.jobName = newJob.jobName;
+		this.jobOwner = newJob.jobOwner;
+		this.state = newJob.state;
+		this.errorPath = newJob.errorPath;
+		this.outputPath = newJob.outputPath;
+		this.ctime = newJob.ctime;
+		this.priority = newJob.priority;
+		this.qtime = newJob.qtime;
+		this.resourceList = newJob.resourceList;
+		this.comment = newJob.comment;
+		this.queueKey = newJob.queueKey;
 	}
 
 	@Override

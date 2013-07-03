@@ -2,6 +2,7 @@ package acs.jpbs.core;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -9,6 +10,7 @@ import acs.jpbs.attrib.PbsResource;
 import acs.jpbs.attrib.PbsServerLicenses;
 import acs.jpbs.attrib.PbsStateCount;
 import acs.jpbs.enums.PbsServerState;
+import acs.jpbs.utils.Utils;
 
 public class PbsServer implements Serializable {
 	private static final long serialVersionUID = 6455928702644240133L;
@@ -34,12 +36,21 @@ public class PbsServer implements Serializable {
 	/*
 	 * Transient object data to be reconstructed on either side
 	 */
-	public transient HashMap<String, PbsQueue> queues = new HashMap<String, PbsQueue>();
+	private transient HashMap<String, PbsQueue> queues = new HashMap<String, PbsQueue>();
 	private transient final ReentrantReadWriteLock queueMapLock = new ReentrantReadWriteLock(true);
 	protected transient final Lock queueMapWriteLock = queueMapLock.writeLock();
 	public transient final Lock queueMapReadLock = queueMapLock.readLock();
 	
 	protected PbsServer() { }
+	
+	public void addQueue(PbsQueue q) {
+		this.queueMapWriteLock.lock();
+		try {
+			this.queues.put(q.name, q);
+		} finally {
+			this.queueMapWriteLock.unlock();
+		}
+	}
 	
 	public void debugPrint() {
 		System.out.println("PBS SERVER OBJECT -- OUTPUT");
@@ -65,11 +76,89 @@ public class PbsServer implements Serializable {
 		return this.host;
 	}
 	
+	public PbsJob[] getJobArray() {
+		PbsJob[] retArr = null;
+		for(PbsQueue q : this.getQueueArray()) {
+			retArr = Utils.concat(retArr, q.getJobArray());
+		}
+		return retArr;
+	}
+	
+	public int getNumJobs() {
+		int retVal = 0;
+		if(this.queues == null || this.queues.isEmpty()) return retVal;
+		this.queueMapReadLock.lock();
+		try {
+			for(Entry<String, PbsQueue> qEntry : this.queues.entrySet()) {
+				retVal += qEntry.getValue().getNumJobs();
+			}
+		} finally {
+			this.queueMapReadLock.unlock();
+		}
+		return retVal;
+	}
+	
+	public int getNumQueues() {
+		int retVal = 0;
+		this.queueMapReadLock.lock();
+		try {
+			if(this.queues != null && !this.queues.isEmpty()) retVal = this.queues.size();
+		} finally {
+			this.queueMapReadLock.unlock();
+		}
+		return retVal;
+	}
+	
+	public PbsQueue getQueue(String name) {
+		PbsQueue retQ = null;
+		if(this.queues == null || this.queues.isEmpty()) return null;
+		this.queueMapReadLock.lock();
+		try {
+			if(this.queues.containsKey(name)) retQ = this.queues.get(name);
+		} finally {
+			this.queueMapReadLock.unlock();
+		}
+		return retQ;
+	}
+	
+	public PbsQueue[] getQueueArray() {
+		int numQueues = this.getNumQueues();
+		if(numQueues == 0) return null;
+		PbsQueue[] returnArr = null;
+		
+		this.queueMapReadLock.lock();
+		try {
+			returnArr = new PbsQueue[numQueues];
+			int i = 0;
+			for(Entry<String, PbsQueue> qEntry : this.queues.entrySet()) {
+				returnArr[i++] = qEntry.getValue();
+			}
+		} finally {
+			this.queueMapReadLock.unlock();
+		}
+		return returnArr;
+	}
+	
 	public static PbsServer getInstance() {
 		if(instance == null) {
 			instance = new PbsServer();
 		}
 		return instance;
+	}
+	
+	public void makeCopy(PbsServer ref) {
+		this.state = ref.state;
+		this.host = ref.host;
+		this.scheduling = ref.scheduling;
+		this.stateCount = ref.stateCount;
+		this.defaultQueueKey = ref.defaultQueueKey;
+		this.resourcesAssigned = ref.resourcesAssigned;
+		this.defaultChunk = ref.defaultChunk;
+		this.schedulerIteration = ref.schedulerIteration;
+		this.fLicenses = ref.fLicenses;
+		this.resvEnable = ref.resvEnable;
+		this.licenseCount = ref.licenseCount;
+		this.version = ref.version;
 	}
 
 	@Override
