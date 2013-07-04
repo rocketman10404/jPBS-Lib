@@ -157,6 +157,21 @@ public class PbsQueue implements Serializable {
 		return retArr;
 	}
 	
+	public PbsJob getJobByIndex(int index) {
+		PbsJob retJ = null;
+		if(index < this.getNumJobs()) {
+			this.jobMapReadLock.lock();
+			try {
+				Integer[] iArr = new Integer[this.jobs.size()];
+				this.jobs.keySet().toArray(iArr);
+				retJ = this.jobs.get(iArr[index]);
+			} finally {
+				this.jobMapReadLock.unlock();
+			}
+		}
+		return retJ;
+	}
+	
 	public String getName() {
 		return this.name;
 	}

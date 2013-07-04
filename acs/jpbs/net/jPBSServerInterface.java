@@ -12,4 +12,5 @@ public interface jPBSServerInterface extends Remote {
 	public PbsQueue[] getQueueArray() throws RemoteException;
 	public PbsJob[] getJobArray() throws RemoteException;
 	public void register(jPBSClientInterface newClient) throws RemoteException;
+	public void deregister(jPBSClientInterface client) throws RemoteException;
 }

@@ -51,6 +51,22 @@ public class PbsServer implements Serializable {
 		return instance;
 	}
 	
+	public static void makeCopy(PbsServer ref) {
+		if(instance == null) instance = new PbsServer();
+		instance.state = ref.state;
+		instance.host = ref.host;
+		instance.scheduling = ref.scheduling;
+		instance.stateCount = ref.stateCount;
+		instance.defaultQueueKey = ref.defaultQueueKey;
+		instance.resourcesAssigned = ref.resourcesAssigned;
+		instance.defaultChunk = ref.defaultChunk;
+		instance.schedulerIteration = ref.schedulerIteration;
+		instance.fLicenses = ref.fLicenses;
+		instance.resvEnable = ref.resvEnable;
+		instance.licenseCount = ref.licenseCount;
+		instance.version = ref.version;
+	}
+	
 	public void addQueue(PbsQueue q) {
 		this.queueMapWriteLock.lock();
 		try {
@@ -196,6 +212,21 @@ public class PbsServer implements Serializable {
 		return retVal;
 	}
 	
+	public PbsQueue getQueue(int index) {
+		PbsQueue retQ = null;
+		if(index < this.getNumQueues()) {
+			this.queueMapReadLock.lock();
+			try {
+				String[] sArr = new String[this.queues.size()];
+				this.queues.keySet().toArray(sArr);
+				retQ = this.queues.get(sArr[index]);
+			} finally {
+				this.queueMapReadLock.unlock();
+			}
+		}
+		return retQ;
+	}
+	
 	public PbsQueue getQueue(String name) {
 		PbsQueue retQ = null;
 		if(this.queues == null || this.queues.isEmpty()) return null;
@@ -207,7 +238,7 @@ public class PbsServer implements Serializable {
 		}
 		return retQ;
 	}
-	
+
 	public PbsQueue[] getQueueArray() {
 		int numQueues = this.getNumQueues();
 		if(numQueues == 0) return null;
@@ -262,21 +293,6 @@ public class PbsServer implements Serializable {
 				+ ((stateCount == null) ? 0 : stateCount.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
-	}
-
-	public void makeCopy(PbsServer ref) {
-		this.state = ref.state;
-		this.host = ref.host;
-		this.scheduling = ref.scheduling;
-		this.stateCount = ref.stateCount;
-		this.defaultQueueKey = ref.defaultQueueKey;
-		this.resourcesAssigned = ref.resourcesAssigned;
-		this.defaultChunk = ref.defaultChunk;
-		this.schedulerIteration = ref.schedulerIteration;
-		this.fLicenses = ref.fLicenses;
-		this.resvEnable = ref.resvEnable;
-		this.licenseCount = ref.licenseCount;
-		this.version = ref.version;
 	}
 	
 	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
