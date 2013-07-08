@@ -238,6 +238,22 @@ public class PbsServer implements Serializable {
 		}
 		return retQ;
 	}
+	
+	public PbsQueue getQueueSafe(String name) {
+		if(this.queues == null) return null;
+		PbsQueue qPtr = null;
+		this.queueMapWriteLock.lock();
+		try {
+			qPtr = this.queues.get(name);
+			if(qPtr == null) {
+				qPtr = new PbsQueue(name, this);
+				this.queues.put(name, qPtr);
+			}
+		} finally {
+			this.queueMapWriteLock.unlock();
+		}
+		return qPtr;
+	}
 
 	public PbsQueue[] getQueueArray() {
 		int numQueues = this.getNumQueues();
